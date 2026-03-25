@@ -1,5 +1,9 @@
-// Firebase modular imports exposed from index.html
-const { db, ref, set, onValue, runTransaction } = window;
+// Use Firebase functions directly from window
+const db = window.db;
+const ref = window.ref;
+const set = window.set;
+const onValue = window.onValue;
+const runTransaction = window.runTransaction;
 
 // Database references
 const playersRef = ref(db, "players");
