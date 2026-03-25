@@ -1,6 +1,9 @@
+// Firebase modular imports exposed from index.html
+const { db, ref, set, onValue, runTransaction } = window;
+
 // Database references
-const playersRef = db.ref("players");
-const currentItRef = db.ref("currentIt");
+const playersRef = ref(db, "players");
+const currentItRef = ref(db, "currentIt");
 
 // UI elements
 const nameInput = document.getElementById("playerName");
@@ -9,24 +12,26 @@ const tagSelect = document.getElementById("tagSelect");
 const tagBtn = document.getElementById("tagBtn");
 const currentItDisplay = document.getElementById("currentIt");
 const leaderboardList = document.getElementById("leaderboard");
+
 // New UI elements
 const yourNameInput = document.getElementById("yourName");
 const setNameBtn = document.getElementById("setNameBtn");
 const statusMessage = document.getElementById("statusMessage");
 
 let yourName = "";
+
+// Set your name
 setNameBtn.onclick = () => {
   yourName = yourNameInput.value.trim();
   yourNameInput.value = "";
 };
-
 
 // Add player
 addPlayerBtn.onclick = () => {
   const name = nameInput.value.trim();
   if (!name) return;
 
-  playersRef.child(name).set({
+  set(ref(db, `players/${name}`), {
     tagsGiven: 0,
     tagsReceived: 0
   });
@@ -35,7 +40,7 @@ addPlayerBtn.onclick = () => {
 };
 
 // Listen for players
-playersRef.on("value", snapshot => {
+onValue(playersRef, snapshot => {
   const players = snapshot.val() || {};
 
   // Update dropdown
@@ -58,7 +63,8 @@ playersRef.on("value", snapshot => {
     });
 });
 
-currentItRef.on("value", snapshot => {
+// Listen for current it
+onValue(currentItRef, snapshot => {
   const it = snapshot.val();
   currentItDisplay.textContent = it || "Nobody yet";
 
@@ -76,23 +82,22 @@ currentItRef.on("value", snapshot => {
   }
 });
 
-
 // Tag button
 tagBtn.onclick = () => {
   const tagged = tagSelect.value;
   if (!tagged) return;
 
   // Update "it"
-  currentItRef.set(tagged);
+  set(currentItRef, tagged);
 
-  // Update stats
-  playersRef.child(tagged).child("tagsReceived").transaction(n => (n || 0) + 1);
+  // Increase tagsReceived for the tagged player
+  runTransaction(ref(db, `players/${tagged}/tagsReceived`), n => (n || 0) + 1);
 
-  // Whoever was previously it gets a "tag given"
-  currentItRef.once("value", snap => {
+  // Increase tagsGiven for the previous "it"
+  onValue(currentItRef, snap => {
     const previousIt = snap.val();
     if (previousIt && previousIt !== tagged) {
-      playersRef.child(previousIt).child("tagsGiven").transaction(n => (n || 0) + 1);
+      runTransaction(ref(db, `players/${previousIt}/tagsGiven`), n => (n || 0) + 1);
     }
-  });
+  }, { onlyOnce: true });
 };
