@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tag App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1 class="title">🌈 Tag Tracker</h1>
+
+  <div class="container">
+
+    <div class="card">
+  <h2>Your Name</h2>
+  <input id="yourName" placeholder="Type your name" />
+  <button id="setNameBtn">Set Name</button>
+</div>
+
+    <!-- Player Registration -->
+    <div class="card">
+      <h2>Add Player</h2>
+      <input id="playerName" placeholder="Player name" />
+      <button id="addPlayerBtn">Add</button>
+    </div>
+
+    <!-- Current It -->
+    <div class="card">
+      <h2>Who's It?</h2>
+      <p id="currentIt" class="big-text">Nobody yet</p>
+      <p id="statusMessage" class="big-text"></p>
+
+
+      <select id="tagSelect"></select>
+      <button id="tagBtn">Tag!</button>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="card">
+      <h2>Leaderboard</h2>
+      <ul id="leaderboard"></ul>
+    </div>
+
+  </div>
+
+ <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAduXmZfqPMOJdKOU9cEUO0hGKzmzheWj8",
+    authDomain: "tag-app-5bd2d.firebaseapp.com",
+    projectId: "tag-app-5bd2d",
+    storageBucket: "tag-app-5bd2d.firebasestorage.app",
+    messagingSenderId: "873261500115",
+    appId: "1:873261500115:web:3fe082687315c46ad6b626"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+</script>
+
+  <script src="app.js"></script>
+</body>
+</html>
